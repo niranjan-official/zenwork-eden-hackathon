@@ -10,6 +10,7 @@ import React, { useState } from 'react'
 const SignupForm = () => {
 
     const Router = useRouter();
+    const [isButtonLoad, setIsButtonLoad] = useState(false);
     const [userData, setUserData] = useState({
         username: '',
         email: '',
@@ -28,6 +29,7 @@ const SignupForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            setIsButtonLoad(true);
             const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
             // The user is created successfully, now add additional data to Firestore
             await setDoc(doc(db, "users", userData.email), {
@@ -38,13 +40,14 @@ const SignupForm = () => {
 
             // After both operations succeed, navigate the user
             if (userData.position === "employer") {
-                Router.push('/employer');
+                Router.push('/employer/dashboard');
             } else {
                 Router.push('/dashboard');
             }
         } catch (error) {
             console.error(error.message);
             alert(error.message);
+            setIsButtonLoad(false);
         }
     };
 
@@ -108,9 +111,18 @@ const SignupForm = () => {
                 </div>
                 <button
                     type='submit'
-                    className='w-fit bg-blue-500 p-2 px-10 text-white rounded-[0.4rem] hover:bg-blue-700 mt-2'
+                    disabled={isButtonLoad}
+                    className='w-fit flex gap-2 items-center bg-blue-500 disabled:bg-blue-700 p-2 px-10 text-white rounded-[0.4rem] hover:bg-blue-700 mt-2'
                 >
                     Signup
+                    {
+                        isButtonLoad && (
+                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-loader-2 animate-spin">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M12 3a9 9 0 1 0 9 9" />
+                            </svg>
+                        )
+                    }
                 </button>
                 <div className='w-full flex items-center gap-2'>
                     <hr className='w-full border border-gray-500' />

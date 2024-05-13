@@ -3,12 +3,9 @@ import React, { useEffect, useState } from 'react'
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import Table from '@/components/Table'
+import TableStructure from '@/components/TableStructure'
 
 
 const page = () => {
@@ -109,8 +106,9 @@ const page = () => {
                 </Dialog>
 
             </div>
-            <div className='w-full flex'>
-                <Table/>
+            <hr className='border border-black my-4' />
+            <div className='w-full flex flex-1 items-center px-4'>
+                <TableStructure/>
             </div>
         </div>
     )
