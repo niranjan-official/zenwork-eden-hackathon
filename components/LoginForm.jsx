@@ -30,22 +30,31 @@ const LoginForm = () => {
             setIsButtonLoad(false);
         }
     };
-    const handleGoogleSubmit = () => {
-
-        signInWithPopup(auth, GoogleProvider)
-            .then((result) => {
-                const credential = GoogleAuthProvider.credentialFromResult(result);
-                const token = credential.accessToken;
-                const user = result.user;
-                Router.push("/dashboard");
-            }).catch((error) => {
-                alert("Login Failed, Try Again !!");
-            });
+    const handleGoogleSubmit = async () => {
+        try {
+            const userCredential = await signInWithPopup(auth, GoogleProvider);
+            const user = userCredential.user;
+            const data = await getData("users", user.email);
+            if (data.position === 'employer') {
+                Router.push('/employer/dashboard');
+            } else {
+                Router.push('/dashboard');
+            }
+        } catch (error) {
+            alert("Login Failed, Try Again !!");
+        }
     }
+
 
     return (
         <div className='p-8 flex flex-col items-center w-full sm:w-3/4 lg:w-1/3 bg-primary text-white rounded-[1rem] shadow-md'>
-            <h1 className='text-4xl font-semibold'>ZenWork</h1>
+            <h1 className='text-4xl font-semibold flex items-center'><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-12 icon icon-tabler icons-tabler-outline icon-tabler-arrow-left-right">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M17 13l4 -4l-4 -4" />
+                <path d="M7 13l-4 -4l4 -4" />
+                <path d="M12 14a5 5 0 0 1 5 -5h4" />
+                <path d="M12 19v-5a5 5 0 0 0 -5 -5h-4" />
+            </svg>ZenWork</h1>
             <p className='text-zinc-500 mt-2 text-center'>Assigning work to right people at the right time</p>
             <form onSubmit={handleSubmit} className='w-full flex flex-col items-center gap-5 mt-6 sm:mt-16'>
                 <input onChange={(e) => setEmail(e.target.value)} className='w-full p-2' type="text" placeholder='Email' required />
@@ -63,10 +72,10 @@ const LoginForm = () => {
                     <span>or</span>
                     <hr className='w-full border border-gray-500' />
                 </div>
-                <button onClick={handleGoogleSubmit} type='button' className='flex gap-2 items-center bg-white py-3 px-2 text-black '>
-                    <Image src={'/google.svg'} height={30} width={30} />
-                    <span className=''>
-                        Continue with Google
+                <button onClick={handleGoogleSubmit} type='button' className='flex gap-2 items-center bg-blue-500 hover:bg-blue-700 p-[0.2rem] text-white '>
+                    <Image src={'/google.svg'} className=' bg-white p-2' height={45} width={45} />
+                    <span className='font-semibold px-3'>
+                        Sign up with Google
                     </span>
                 </button>
             </form>

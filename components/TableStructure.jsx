@@ -1,4 +1,5 @@
-import React from 'react'
+'use client'
+import React, { useEffect, useState } from 'react'
 import {
     Table,
     TableBody,
@@ -10,76 +11,66 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Progress } from "@/components/ui/progress"
-
-const invoices = [
-    {
-        invoice: "INV001",
-        paymentStatus: "Paid",
-        totalAmount: "$250.00",
-        Progress: 50
-    },
-    {
-        invoice: "INV002",
-        paymentStatus: "Pending",
-        totalAmount: "$150.00",
-        Progress: 90
-    },
-    {
-        invoice: "INV003",
-        paymentStatus: "Unpaid",
-        totalAmount: "$350.00",
-        Progress: 70
-    },
-    {
-        invoice: "INV004",
-        paymentStatus: "Paid",
-        totalAmount: "$450.00",
-        Progress: 40
-    },
-    {
-        invoice: "INV005",
-        paymentStatus: "Paid",
-        totalAmount: "$550.00",
-        Progress: 60
-    },
-    {
-        invoice: "INV006",
-        paymentStatus: "Pending",
-        totalAmount: "$200.00",
-        Progress: 30
-    },
-    {
-        invoice: "INV007",
-        paymentStatus: "Unpaid",
-        totalAmount: "$300.00",
-        Progress: 50
-    },
-]
+import { collection, getDocs } from 'firebase/firestore'
+import { db } from '@/firebase/config'
+import Loading from './Loading'
 
 const TableStructure = () => {
-    return (
-        <Table className="border border-black">
-            <TableHeader>
-                <TableRow className="border border-black">
-                    <TableHead className="w-[300px] font-semibold">Task Name</TableHead>
-                    <TableHead className="font-semibold">Assignee</TableHead>
-                    <TableHead className="font-semibold text-center">Status</TableHead>
-                    <TableHead className="text-right font-semibold">Difficulty</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody >
-                {invoices.map((invoice) => (
-                    <TableRow key={invoice.invoice} className="border border-black odd:bg-neutral-200">
-                        <TableCell className="font-medium">{invoice.invoice}</TableCell>
-                        <TableCell>{invoice.paymentStatus}</TableCell>
-                        <TableCell><Progress className="bg-slate-300" value={invoice.Progress} />
-                        </TableCell>
-                        <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+
+    const [tasks, setTasks] = useState('');
+
+    useEffect(() => {
+        getTasks();
+    }, [])
+
+    const getTasks = async () => {
+        try {
+            const querySnapshot = await getDocs(collection(db, "tasks"));
+            const teamMembers = []; // Initialize an empty array
+
+            querySnapshot.forEach((doc) => {
+                // Push each document's data to the array
+                    teamMembers.push({
+                        id: doc.id,
+                        data: doc.data()
+                    });
+            });
+            console.log(teamMembers);
+
+            setTasks(teamMembers);
+        } catch (error) {
+            console.error("Error getting team members: ", error);
+            return []; // Return an empty array if there's an error
+        }
+    };
+    if(tasks){
+
+        return (
+            <Table className="">
+                <TableHeader>
+                    <TableRow className="border border-black">
+                        <TableHead className="w-[300px] font-semibold">Task Name</TableHead>
+                        <TableHead className="font-semibold">Assignee</TableHead>
+                        <TableHead className="font-semibold text-center">Status</TableHead>
+                        <TableHead className="text-right font-semibold">Difficulty</TableHead>
                     </TableRow>
-                ))}
-            </TableBody>
-        </Table>
-    );
+                </TableHeader>
+                <TableBody >
+                    {tasks.map((invoice) => (
+                        <TableRow key={invoice.invoice} className=" odd:bg-primary/10">
+                            <TableCell className="font-medium">{invoice.data.title}</TableCell>
+                            <TableCell>{invoice.data.assignee}</TableCell>
+                            <TableCell><Progress className="bg-slate-400" value={invoice.data.completion ? 100 : 1} />
+                            </TableCell>
+                            <TableCell className="text-right">{invoice.data.difficulty}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        );
+    }else{
+        return <Loading/>;
+    }
 }
 
 export default TableStructure

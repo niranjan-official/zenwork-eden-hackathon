@@ -98,12 +98,12 @@ const TeamTable = () => {
                                 member.data.active ? (
                                     <div className='flex items-center gap-2'>
                                         <div className='size-2 bg-green-500 rounded-full'></div>
-                                        ACTIVE
+                                        AVAILABLE
                                     </div>
                                 ) : (
                                     <div className='flex items-center gap-2'>
                                         <div className='size-2 bg-red-500 rounded-full'></div>
-                                        INACTIVE
+                                        ON WORK
                                     </div>
                                 )
                             }</TableCell>

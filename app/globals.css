@@ -3,5 +3,5 @@
   @tailwind utilities;
 
  input{
-  @apply bg-transparent text-white border-b-2 border-white focus:ring-0 focus:outline-none
+  @apply bg-transparent border-b-2 border-white focus:ring-0 focus:outline-none
  }

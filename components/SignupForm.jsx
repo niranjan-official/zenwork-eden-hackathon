@@ -35,7 +35,9 @@ const SignupForm = () => {
             await setDoc(doc(db, "users", userData.email), {
                 name: userData.username,
                 email: userData.email,
-                position: userData.position
+                position: userData.position,
+                active: true,
+                completionTime: 0
             });
 
             // After both operations succeed, navigate the user

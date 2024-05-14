@@ -2,6 +2,7 @@ import Image from 'next/image'
 import React from 'react'
 import Sidebar from './Sidebar'
 import NavButton from './NavButton'
+import LogoutButton from './LogoutButton'
 
 const Menu = () => {
     return (
@@ -17,7 +18,7 @@ const Menu = () => {
             </div>
             <NavButton />
             <div className='max-sm:hidden w-full flex flex-col'>
-                <button className=' p-2 bg-gray-100 text-primary rounded-[0.4rem] font-semibold mb-10'>Logout</button>
+                <LogoutButton/>
             </div>
         </div>
     )
