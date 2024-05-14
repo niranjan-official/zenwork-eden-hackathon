@@ -60,7 +60,7 @@ const TableStructure = () => {
                         <TableRow key={invoice.invoice} className=" odd:bg-primary/10">
                             <TableCell className="font-medium">{invoice.data.title}</TableCell>
                             <TableCell>{invoice.data.assignee}</TableCell>
-                            <TableCell><Progress className="bg-slate-400" value={invoice.data.completion ? 100 : 1} />
+                            <TableCell><Progress className="bg-slate-400" value={invoice.data.completion ? 100 : 3} />
                             </TableCell>
                             <TableCell className="text-right">{invoice.data.difficulty}</TableCell>
                         </TableRow>
